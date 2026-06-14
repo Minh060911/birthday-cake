@@ -96,13 +96,8 @@
             }
 
             try {
-                // ĐÃ SỬA: Tắt các bộ lọc tiếng ồn của trình duyệt
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: false,
-                        autoGainControl: false,
-                        noiseSuppression: false
-                    } 
+                    audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false } 
                 });
                 setupAudio(stream);
                 setupScreen.classList.add('hidden');
@@ -126,14 +121,17 @@
             let sum = 0; for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
             let average = sum / bufferLength;
 
-            // ĐÃ SỬA: Giảm độ nhạy xuống để dễ thổi tắt hơn
             if (average > 40) blowOutCandles(); else requestAnimationFrame(listenToBlow);
         }
 
         function blowOutCandles() {
             isBlown = true;
             const flames = document.querySelectorAll('.flame');
-            flames.forEach(flame => { flame.style.opacity = '0'; flame.style.transform = 'translateX(-50%) scale(0)'; });
+            flames.forEach(flame => { 
+                // ĐÃ SỬA: Ép tắt luôn cả animation và ẩn luôn đi
+                flame.style.animation = 'none'; 
+                flame.style.display = 'none'; 
+            });
             instructionsText.style.display = 'none';
             birthdayText.classList.add('show-text');
         }
