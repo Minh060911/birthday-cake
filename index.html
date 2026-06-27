@@ -188,6 +188,8 @@
             animation: pulse 2.2s infinite;
             transition: opacity 0.5s ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 90%;
         }
 
         /* Khung chứa bánh kem - Phóng to kích thước của bánh kem */
@@ -204,6 +206,7 @@
             height: auto;
             display: block;
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.7));
+            cursor: pointer;
         }
 
         @keyframes cakeFloat {
@@ -319,7 +322,7 @@
         <div class="cake-container">
             <div class="candles" id="candlesContainer"></div>
             <!-- File ảnh cake.png đã được loại bỏ nền ô cờ ô vuông đen trắng -->
-            <img src="cake.png" class="cake-img" alt="Bánh sinh nhật CR7">
+            <img src="cake.png" id="cakeImg" class="cake-img" alt="Bánh sinh nhật CR7">
         </div>
         <div class="instructions" id="instructionsText">Đưa miệng gần micro và <strong>THỔI MẠNH</strong> thì chắc là nến sẽ tắt!</div>
     </div>
@@ -328,6 +331,7 @@
         const startBtn = document.getElementById('startBtn');
         const setupScreen = document.getElementById('setup-screen');
         const cakeScreen = document.getElementById('cake-screen');
+        const cakeImg = document.getElementById('cakeImg');
         const candlesContainer = document.getElementById('candlesContainer');
         const birthdayText = document.getElementById('birthdayText');
         const instructionsText = document.getElementById('instructionsText');
@@ -392,6 +396,11 @@
             createCandles();
 
             try {
+                // Kiểm tra xem trình duyệt có hỗ trợ mediaDevices không (ví dụ chạy dạng file:// sẽ bị chặn)
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("Không hỗ trợ Microphone ở giao thức file:// hoặc chế độ không bảo mật");
+                }
+
                 // Yêu cầu quyền truy cập Micro và tắt bộ lọc ồn để bắt tiếng thổi tốt nhất
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: { 
@@ -408,9 +417,49 @@
                 // Bắt đầu lắng nghe tiếng gió thổi
                 listenToBlow();
             } catch (err) { 
-                alert("Vui lòng nhấn cho phép (Allow) sử dụng Microphone thì mới thổi nến được nhé!"); 
+                console.warn("Lỗi micro hoặc đang chạy ở chế độ offline file://. Chuyển sang chế độ click dự phòng:", err);
+                
+                // VẪN CHO VÀO màn hình bánh kem bình thường!
+                setupScreen.classList.add('hidden');
+                cakeScreen.classList.remove('hidden');
+                
+                // Thay đổi hướng dẫn thành click/chạm
+                instructionsText.innerHTML = "Micro không khả dụng. Hãy <strong>BẤM LÊN BÁNH KEM</strong> để thổi tắt nến nhé! 💨";
+                
+                // Kích hoạt tính năng click dự phòng
+                enableClickFallback();
             }
         });
+
+        // Chế độ dự phòng: click chuột/chạm màn hình để thổi nến
+        function enableClickFallback() {
+            cakeScreen.style.cursor = 'pointer';
+            
+            const handleBlowClick = () => {
+                if (isBlown) return;
+
+                // Thổi ngẫu nhiên tắt từ 2 đến 4 cây nến mỗi lần bấm
+                let blowCount = Math.floor(Math.random() * 3) + 2;
+                blowCount = Math.min(blowCount, litCandles.length);
+
+                for (let k = 0; k < blowCount; k++) {
+                    if (litCandles.length > 0) {
+                        const randIdx = Math.floor(Math.random() * litCandles.length);
+                        const candle = litCandles.splice(randIdx, 1)[0];
+                        extinguishCandle(candle);
+                    }
+                }
+
+                // Nếu tắt hết nến
+                if (litCandles.length === 0) {
+                    triggerCelebration();
+                    cakeScreen.removeEventListener('click', handleBlowClick);
+                }
+            };
+
+            // Lắng nghe sự kiện click trên toàn màn hình bánh
+            cakeScreen.addEventListener('click', handleBlowClick);
+        }
 
         // Thiết lập bộ phân tích âm thanh từ mic
         function setupAudio(stream) {
