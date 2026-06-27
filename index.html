@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, Long! 🎂</title>
-    <!-- Nhúng Google Fonts: font 'Oi' (dành cho tiêu đề) & 'Outfit' (dành cho mô tả) -->
+    <title>Happy Birthday, Anh Long! 🎂</title>
+    <!-- Imports Google Fonts: 'Oi' (Main bold display) & 'Outfit' (Body text) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oi&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Thư viện tạo hiệu ứng pháo hoa giấy khi thổi tắt hết nến -->
+    <!-- Canvas Confetti Library for victory celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -35,7 +35,7 @@
             display: none !important;
         }
 
-        /* Hiệu ứng đèn Neon mờ ảo ở nền (Aurora) */
+        /* Background Aurora Glow Effects */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
@@ -68,7 +68,7 @@
             100% { transform: translate(60px, 80px) scale(1.15); }
         }
 
-        /* Màn hình khởi đầu 1: Thiết kế hiệu ứng kính mờ (Glassmorphism) */
+        /* Screen 1: Start/Intro Overlay (Glassmorphism) */
         .screen-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
@@ -134,7 +134,7 @@
             transform: translateY(-1px) scale(0.98);
         }
 
-        /* Màn hình 2: Bánh kem & tương tác thổi nến */
+        /* Screen 2: Interactive Cake Screen */
         #cake-screen {
             display: flex;
             flex-direction: column;
@@ -189,7 +189,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        /* Khung chứa bánh kem */
+        /* Cake Visual Element */
         .cake-container {
             position: relative;
             width: 440px;
@@ -210,7 +210,7 @@
             100% { transform: translateY(-12px); }
         }
 
-        /* Nến và ngọn lửa */
+        /* Candles Rendering & Animation */
         .candles {
             position: absolute;
             top: 0;
@@ -261,7 +261,7 @@
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
         }
 
-        /* Hiệu ứng khói khi nến tắt */
+        /* Smoke effect when candle gets blown out */
         .smoke {
             position: absolute;
             top: -15px;
@@ -301,23 +301,23 @@
 </head>
 <body>
 
-    <!-- Các quầng sáng trang trí ở nền -->
+    <!-- Background glowing aesthetics -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
 
-    <!-- Màn hình 1: Lời giới thiệu & Nút kích hoạt -->
+    <!-- Màn hình 1: Lời giới thiệu & Nút kích hoạt (Start Screen) -->
     <div id="setup-screen" class="screen-card">
         <h1 class="title-oi">HAPPY BIRTHDAY<br>ANH LONG! 🎉</h1>
         <p class="subtitle">Hãy chuẩn bị thổi tắt nến trên chiếc bánh sinh nhật đặc biệt này nhé!</p>
         <button id="startBtn" class="btn-primary">THẮP NẾN & BẮT ĐẦU! 🕯️</button>
     </div>
 
-    <!-- Màn hình 2: Bánh sinh nhật & tương tác thổi nến -->
+    <!-- Màn hình 2: Bánh sinh nhật & thổi nến (Interactive Screen) -->
     <div id="cake-screen" class="screen hidden">
         <h1 id="birthdayText" class="birthday-text">HAPPY BIRTHDAY,<br>ANH LONG! 🥳</h1>
         <div class="cake-container">
             <div class="candles" id="candlesContainer"></div>
-            <!-- File ảnh cake.png đã được loại bỏ nền ô cờ ô vuông đen trắng -->
+            <!-- Sử dụng ảnh bánh kem Ronaldo đã xử lý tách nền trong suốt -->
             <img src="cake.png" class="cake-img" alt="Bánh sinh nhật CR7">
         </div>
         <div class="instructions" id="instructionsText">Đưa miệng gần micro và <strong>THỔI MẠNH</strong> để tắt nến nhé! 💨</div>
